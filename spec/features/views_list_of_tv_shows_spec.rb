@@ -5,7 +5,6 @@ feature 'user views list of TV shows', %Q{
   I want to view a list of people's favorite TV shows
   So I can find new shows to watch
 } do
-
   # Acceptance Criteria:
   # * I can see a list of all the TV shows
 
@@ -19,6 +18,8 @@ feature 'user views list of TV shows', %Q{
     show_attrs.each do |attrs|
       shows << TelevisionShow.create(attrs)
     end
+
+
 
     visit '/television_shows'
     shows.each do |show|
