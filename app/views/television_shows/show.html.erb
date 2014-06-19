@@ -8,3 +8,18 @@
 <div>
   <%= @television_show.synopsis %>
 </div>
+
+<hr>
+<h5>Post New Character</h5>
+<%= form_for [@television_show, @character] do |f| %>
+  <%= f.label :name %>:
+  <%= f.text_field :name %><br>
+
+  <%= f.label :actor %>:
+  <%= f.text_field :actor %><br>
+
+  <%= f.label :description %>:
+  <%= f.text_area :description %><br>
+
+  <%= f.submit %>
+<% end %>
