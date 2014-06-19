@@ -10,6 +10,15 @@
 </div>
 
 <hr>
+<h4>Cast</h4>
+<% @television_show.characters.each do |character| %>
+  <%= character.name %> played by <%= character.actor %>
+  <p class='small'>
+    description: <%= character.description %>
+  </p>
+<%end%>
+
+<hr>
 <h5>Post New Character</h5>
 <%= form_for [@television_show, @character] do |f| %>
   <%= f.label :name %>:

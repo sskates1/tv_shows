@@ -24,6 +24,7 @@ class TelevisionShowsController < ApplicationController
     end
   end
 
+
   private
 
   def television_show_params
