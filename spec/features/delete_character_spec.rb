@@ -16,14 +16,17 @@ feature "user views a TV show's details", %Q{
     show = TelevisionShow.create(title: 'Game of Thrones',
       network: 'HBO' )
 
+    character_attr = {name: 'Eddard Stark', actor: 'Sean Bean'}
+    character = Character.new(character_attr)
+    character.television_show = show
+    character.save
+
     visit "/television_shows/#{show.id}"
 
-    click_on 'Delete'
+    click_on 'Delete Character'
 
-    character = {chrarcter: 'Eddard Stark', actor: 'Sean Bean'}
-
-    expect(page).to_not have_content character[:character]
-    expect(page).to_not have_content character[:actor]
+    expect(page).to_not have_content character.name
+    expect(page).to_not have_content character.actor
 
   end
 end

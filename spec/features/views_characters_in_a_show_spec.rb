@@ -17,9 +17,16 @@ feature "user views a TV show's details", %Q{
       network: 'HBO' )
 
     characters_show = [
-      {chrarcter: 'Eddard Stark', actor: 'Sean Bean', description: 'Hand of the King, Lord of Winterfell, Warden of the North'},
-      {character: 'Tywin Lanister', actor:'Charles Dance', description: 'Hand of the King, Lord of Casterly Rock, Warden of the West'}
+      {name: 'Eddard Stark', actor: 'Sean Bean', description: 'Hand of the King, Lord of Winterfell, Warden of the North'},
+      {name: 'Tywin Lanister', actor:'Charles Dance', description: 'Hand of the King, Lord of Casterly Rock, Warden of the West'}
     ]
+    character_list =[]
+    characters_show.each do |character_attr|
+      character = Character.new(character_attr)
+      character.television_show = show
+      character_list << character
+      character.save
+    end
 
     visit "/television_shows/#{show.id}"
 
@@ -28,10 +35,10 @@ feature "user views a TV show's details", %Q{
     expect(page).to have_content show.years
     expect(page).to have_content show.synopsis
 
-    characters_show.each do |character|
-      expect(page).to have_content character[:character]
-      expect(page).to have_content character[:actor]
-      expect(page).to have_content character[:description]
+    character_list.each do |character|
+      expect(page).to have_content character.name
+      expect(page).to have_content character.actor
+      expect(page).to have_content character.description
     end
   end
 end

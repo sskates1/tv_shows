@@ -10,23 +10,18 @@ feature 'user adds a new character to a TV show', %Q{
   # * I must provide the show's title.
   # * I can optionally provide the show's network, the years it ran,
   # and a synopsis.
-
-  scenario 'user adds a new character to a TV show' do
-    attrs = {
+  attrs = {
       title: 'Game of Thrones',
       network: 'HBO',
       years: '2011-',
       synopsis: 'Seven noble families fight for control of the mythical land of Westeros.'
     }
 
-    show = TelevisionShow.new(attrs)
 
-    visit '/television_shows/new'
-    fill_in 'Title', with: show.title
-    fill_in 'Network', with: show.network
-    fill_in 'Years', with: show.years
-    fill_in 'Synopsis', with: show.synopsis
-    click_on 'Submit'
+
+  scenario 'user adds a new character to a TV show' do
+    show = TelevisionShow.new(attrs)
+    show.save
 
     char_attrs = {
       name: 'Eddard Stark',
@@ -36,11 +31,13 @@ feature 'user adds a new character to a TV show', %Q{
 
     character = Character.new(char_attrs)
 
-    visit '/television_shows/#{show.id}'
-    fill_in 'Character', with: character.name
+    #binding.pry
+
+    visit "/television_shows/#{show.id}"
+    fill_in 'Name', with: character.name
     fill_in 'Actor', with: character.actor
     fill_in 'Description', with: character.description
-    click_on 'Submit'
+    click_on 'Create Character'
 
     expect(page).to have_content 'Success'
     expect(page).to have_content character.name
@@ -49,25 +46,35 @@ feature 'user adds a new character to a TV show', %Q{
   end
 
   scenario 'without required attributes' do
-    visit '/television_shows/#{show.id}'
-    click_on 'Submit'
+
+    show = TelevisionShow.create(attrs)
+
+    visit "/television_shows/#{show.id}"
+    click_on 'Create Character'
 
     expect(page).to_not have_content 'Success'
     expect(page).to have_content "can't be blank"
   end
 
   scenario 'user cannot add a character that is already in the database' do
+
     char_attrs = {
       name: 'Eddard Stark',
       actor: 'Sean Bean'
     }
 
+    show = TelevisionShow.create(attrs)
     character = Character.create(char_attrs)
 
-    visit '/television_shows/#{show.id}'
-    fill_in 'Character', with: character.name
+    visit "/television_shows/#{show.id}"
+    fill_in 'Name', with: character.name
     fill_in 'Actor', with: character.actor
-    click_on 'Submit'
+    click_on 'Create Character'
+
+    visit "/television_shows/#{show.id}"
+    fill_in 'Name', with: character.name
+    fill_in 'Actor', with: character.actor
+    click_on 'Create Character'
 
     expect(page).to_not have_content 'Success'
     expect(page).to have_content "has already been taken"

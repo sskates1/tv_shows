@@ -9,18 +9,34 @@ class CharactersController < ApplicationController
     @character.television_show = @television_show
 
     #binding.pry
-
+    check = Character.find_by(name: @character.name)
     if @character.save
       flash[:notice] = "Success!"
-      redirect_to '/television_shows/{#@television_show.id}'
+      redirect_to "/television_shows/#{@character.television_show_id}"
+
+    elsif @character.name.length == 0 || @character.actor.length == 0
+      flash[:notice] = "Name and Actor can't be blank."
+      render template: '/television_shows/show'
+
+    elsif check !=nil
+      flash[:notice] = "That character has already been taken"
+      render template: '/television_shows/show'
     else
-      flash.now[:notice] = "Your character couldn't be saved."
+      flash.now[:notice] = "Your character couldn't be saved. Name and Actor can't be blank."
       render template: '/television_shows/show'
     end
   end
 
   def destroy
-    @character = Character.find()
+    #binding.pry
+    @character = Character.find(params[:id])
+    @show = TelevisionShow.find(@character[:television_show_id])
+    if @character.destroy
+      flash.now[:notice] = "Character deleted"
+      redirect_to "/television_shows/#{@show.id}"
+    else
+      flash.now[:notice] = "Character could not be deleted"
+    end
   end
 
   private

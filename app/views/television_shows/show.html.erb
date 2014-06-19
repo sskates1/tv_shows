@@ -15,6 +15,7 @@
   <%= character.name %> played by <%= character.actor %>
   <p class='small'>
     description: <%= character.description %>
+    <%= button_to "Delete Character", character_path(character), method: :delete %>
   </p>
 <%end%>
 
