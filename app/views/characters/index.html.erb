@@ -1,0 +1,18 @@
+<h3>All TV Characters</h3>
+
+<table class='table-bordered'>
+  <thead>
+    <tr>
+      <th>Character</th>
+      <th>Show</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @characters.each do |character| %>
+      <tr>
+        <td><%= character.name %></td>
+        <td><%= character.television_show.title %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
